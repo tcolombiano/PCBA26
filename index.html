@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Investigador PCBA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    :root {
+      --azul-escuro: #0a2f5a;
+      --azul-medio: #1a4b7a;
+      --azul-claro: #3a7bb5;
+      --cinza: #e9edf2;
+      --cinza-escuro: #4a5568;
+      --ouro: #d4af37;
+      --branco: #ffffff;
+      --sombra: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      background: var(--cinza);
+      color: #1a202c;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--azul-escuro);
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header .logo h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .header .logo span {
+      font-size: 0.9rem;
+      background: var(--ouro);
+      color: var(--azul-escuro);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .header .user-info {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header .user-info .badge {
+      background: var(--ouro);
+      color: var(--azul-escuro);
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    /* NAV */
+    .nav {
+      background: var(--branco);
+      padding: 0 24px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      border-bottom: 2px solid var(--azul-claro);
+    }
+
+    .nav button {
+      background: transparent;
+      border: none;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--cinza-escuro);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .nav button:hover {
+      background: var(--cinza);
+      border-bottom-color: var(--azul-claro);
+    }
+
+    .nav button.active {
+      color: var(--azul-escuro);
+      border-bottom-color: var(--azul-escuro);
+      font-weight: 600;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      padding: 24px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page {
+      display: none;
+      animation: fade 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: var(--sombra);
+      border-left: 6px solid var(--azul-claro);
+      transition: transform 0.15s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--cinza-escuro);
+      font-weight: 600;
+    }
+
+    .card .value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-escuro);
+      margin: 6px 0 2px;
+    }
+
+    .card .sub {
+      font-size: 0.85rem;
+      color: #5a6a7a;
+    }
+
+    /* PROGRESS BAR */
+    .progress-container {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: var(--sombra);
+      margin-bottom: 28px;
+    }
+
+    .progress-container h3 {
+      margin-bottom: 16px;
+      color: var(--azul-escuro);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      background: #e2e8f0;
+      border-radius: 30px;
+      height: 12px;
+      overflow: hidden;
+      margin: 8px 0 12px;
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--azul-medio), var(--azul-claro));
+      width: 0%;
+      border-radius: 30px;
+      transition: width 0.4s;
+    }
+
+    /* DISCIPLINAS */
+    .disciplinas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .disciplina-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: var(--sombra);
+      border-top: 4px solid var(--azul-claro);
+      transition: 0.2s;
+    }
+
+    .disciplina-card .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .disciplina-card .nome {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--azul-escuro);
+    }
+
+    .disciplina-card .check {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--azul-medio);
+      cursor: pointer;
+      transform: scale(1.2);
+    }
+
+    .disciplina-card .subtop {
+      font-size: 0.8rem;
+      color: var(--cinza-escuro);
+      margin-bottom: 6px;
+    }
+
+    .disciplina-card .mini-progress {
+      background: #e2e8f0;
+      border-radius: 20px;
+      height: 6px;
+      overflow: hidden;
+      margin: 8px 0 4px;
+    }
+
+    .disciplina-card .mini-progress .fill {
+      height: 100%;
+      background: var(--azul-claro);
+      width: 0%;
+    }
+
+    .disciplina-card .stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--cinza-escuro);
+      margin-top: 6px;
+    }
+
+    /* CRONOGRAMA */
+    .crono-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .crono-tabs button {
+      background: var(--branco);
+      border: 2px solid #d0d7e0;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: 500;
+      color: var(--cinza-escuro);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .crono-tabs button.active {
+      border-color: var(--azul-escuro);
+      background: var(--azul-escuro);
+      color: white;
+    }
+
+    .crono-content {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: var(--sombra);
+      overflow-x: auto;
+    }
+
+    .crono-content table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .crono-content th {
+      background: var(--azul-escuro);
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .crono-content td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .crono-content tr:hover td {
+      background: #f7fafc;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .tag.revisao {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .tag.novo {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .tag.treino {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* SIMULADOS */
+    .simulador-box {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sombra);
+      margin-bottom: 24px;
+    }
+
+    .simulador-box .pergunta {
+      font-weight: 500;
+      margin: 16px 0 8px;
+    }
+
+    .simulador-box .opcoes label {
+      display: block;
+      padding: 8px 14px;
+      margin: 4px 0;
+      border-radius: 10px;
+      background: #f1f4f8;
+      cursor: pointer;
+      transition: 0.15s;
+      border: 2px solid transparent;
+    }
+
+    .simulador-box .opcoes label:hover {
+      background: #e2e8f0;
+    }
+
+    .simulador-box .opcoes input[type="radio"] {
+      margin-right: 12px;
+      accent-color: var(--azul-medio);
+    }
+
+    .simulador-box .btn {
+      background: var(--azul-escuro);
+      color: white;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: 0.2s;
+    }
+
+    .simulador-box .btn:hover {
+      background: var(--azul-medio);
+    }
+
+    .simulador-box .feedback {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #f1f4f8;
+      border-left: 6px solid var(--azul-claro);
+    }
+
+    /* POMODORO */
+    .pomodoro {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .pomodoro .timer {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--azul-escuro);
+      letter-spacing: 4px;
+      margin: 12px 0;
+    }
+
+    .pomodoro .controls button {
+      background: var(--azul-escuro);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 500;
+      margin: 6px 8px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .pomodoro .controls button:hover {
+      background: var(--azul-medio);
+    }
+
+    .pomodoro .controls button.pausa {
+      background: #e2e8f0;
+      color: var(--cinza-escuro);
+    }
+
+    .pomodoro .sessao-info {
+      margin-top: 12px;
+      color: var(--cinza-escuro);
+      font-size: 0.95rem;
+    }
+
+    /* PLAYER */
+    .player-box {
+      background: var(--branco);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--sombra);
+      margin-top: 24px;
+    }
+
+    .player-box iframe {
+      width: 100%;
+      height: 180px;
+      border-radius: 12px;
+      border: none;
+    }
+
+    .player-box .playlist-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0 6px;
+    }
+
+    .player-box .playlist-btns button {
+      background: var(--cinza);
+      border: none;
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .player-box .playlist-btns button:hover {
+      background: var(--azul-claro);
+      color: white;
+    }
+
+    /* TAF */
+    .taf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .taf-card {
+      background: var(--branco);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--sombra);
+      text-align: center;
+    }
+
+    .taf-card .dia {
+      font-weight: 600;
+      color: var(--azul-escuro);
+      font-size: 1.2rem;
+    }
+
+    .taf-card .treino {
+      font-size: 0.95rem;
+      margin: 8px 0;
+    }
+
+    .taf-card .check {
+      margin-top: 10px;
+    }
+
+    /* RESPONSIVO */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: start;
+        gap: 8px;
+        padding: 16px;
+      }
+      .nav {
+        padding: 0 10px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+      .nav button {
+        padding: 12px 14px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+      .main {
+        padding: 16px;
+      }
+      .card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .disciplinas-grid {
+        grid-template-columns: 1fr;
+      }
+      .pomodoro .timer {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--azul-claro);
+      border-radius: 10px;
+    }
+
+    /* utils */
+    .mt-20 {
+      margin-top: 20px;
+    }
+    .mb-20 {
+      margin-bottom: 20px;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <h1>🔹 PCBA</h1>
+      <span>Investigador</span>
+    </div>
+    <div class="user-info">
+      <span>📅 Prova: 06/12/2026</span>
+      <span class="badge">Meta: 70%</span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav" id="navPrincipal">
+    <button class="active" data-page="dashboard">📊 Dashboard</button>
+    <button data-page="cronogramas">📅 Cronogramas</button>
+    <button data-page="disciplinas">📚 Disciplinas</button>
+    <button data-page="simulados">🧪 Simulados</button>
+    <button data-page="taf">🏃 TAF</button>
+    <button data-page="pomodoro">⏳ Pomodoro</button>
+    <button data-page="musica">🎵 Música</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ================= DASHBOARD ================= -->
+    <section id="page-dashboard" class="page active">
+      <div class="card-grid">
+        <div class="card">
+          <div class="label">Disciplinas</div>
+          <div class="value" id="totalDisciplinas">12</div>
+          <div class="sub">concluídas: <span id="discConcluidas">0</span></div>
+        </div>
+        <div class="card">
+          <div class="label">Progresso Geral</div>
+          <div class="value" id="progressoGeralNum">0%</div>
+          <div class="progress-bar" style="margin-top:8px; height:8px;">
+            <div class="fill" id="progressoGeralBar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="label">Simulados</div>
+          <div class="value" id="simuladosFeitos">0</div>
+          <div class="sub">acertos: <span id="acertosSimulados">0</span></div>
+        </div>
+        <div class="card">
+          <div class="label">Dias até a prova</div>
+          <div class="value" id="diasRestantes">--</div>
+          <div class="sub">foco total!</div>
+        </div>
+      </div>
+
+      <div class="progress-container">
+        <h3>📈 Progresso por Disciplina</h3>
+        <div id="progressoDisciplinasLista"></div>
+      </div>
+
+      <div style="background:var(--branco); border-radius:16px; padding:20px 24px; box-shadow:var(--sombra);">
+        <h3 style="margin-bottom:12px; color:var(--azul-escuro);">⚡ Próximas metas</h3>
+        <ul id="proximasMetas" style="list-style:none; padding:0;">
+          <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Iniciar Estatística - revisar conceitos básicos</li>
+          <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Simulado de Direito Penal (10 questões)</li>
+          <li style="padding:8px 0;">🔹 TAF: corrida 3km + flexões</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= CRONOGRAMAS ================= -->
+    <section id="page-cronogramas" class="page">
+      <div class="crono-tabs">
+        <button class="active" data-crono="focado">🎯 Focado na Banca (AOCP)</button>
+        <button data-crono="completo">📘 Completo (Edital)</button>
+      </div>
+      <div class="crono-content" id="cronoContent">
+        <!-- preenchido por JS -->
+      </div>
+    </section>
+
+    <!-- ================= DISCIPLINAS ================= -->
+    <section id="page-disciplinas" class="page">
+      <div class="flex-between mb-20">
+        <h2 style="color:var(--azul-escuro);">📚 Disciplinas do Edital</h2>
+        <span style="font-size:0.9rem; color:var(--cinza-escuro);">Clique no checkbox para marcar como concluída</span>
+      </div>
+      <div class="disciplinas-grid" id="disciplinasGrid"></div>
+    </section>
+
+    <!-- ================= SIMULADOS ================= -->
+    <section id="page-simulados" class="page">
+      <div class="simulador-box">
+        <h3 style="color:var(--azul-escuro);">🧪 Simulado AOCP</h3>
+        <p style="color:var(--cinza-escuro); margin-bottom:12px;">Selecione uma disciplina e responda as questões. O banco prioriza estilo AOCP.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+          <select id="selectSimulado" style="padding:8px 16px; border-radius:30px; border:2px solid #d0d7e0; background:white; font-weight:500;">
+            <option value="todas">Todas as disciplinas</option>
+          </select>
+          <button class="btn" id="btnGerarSimulado" style="padding:8px 24px;">Gerar Simulado</button>
+        </div>
+        <div id="simuladoQuestoes"></div>
+        <div id="simuladoFeedback" class="feedback" style="display:none;"></div>
+      </div>
+      <div style="background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
+        <h4 style="color:var(--azul-escuro);">📊 Histórico de Simulados</h4>
+        <div id="historicoSimulados" style="margin-top:10px; font-size:0.9rem; color:var(--cinza-escuro);">
+          Nenhum simulado realizado ainda.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAF ================= -->
+    <section id="page-taf" class="page">
+      <h2 style="color:var(--azul-escuro); margin-bottom:16px;">🏃 Treinos para o TAF</h2>
+      <div class="taf-grid" id="tafGrid"></div>
+      <div style="margin-top:20px; background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
+        <h4 style="color:var(--azul-escuro);">📌 Dicas</h4>
+        <ul style="list-style:disc; padding-left:20px; color:var(--cinza-escuro);">
+          <li>Corrida: aumente a distância gradualmente (2km → 5km)</li>
+          <li>Flexões: 3 séries de 10, evoluindo para 20</li>
+          <li>Abdominais: 3 séries de 15, evoluindo para 30</li>
+          <li>Barra fixa: treine com elástico se necessário</li>
+          <li>Não se esqueça do alongamento antes e depois</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= POMODORO ================= -->
+    <section id="page-pomodoro" class="page">
+      <div class="pomodoro">
+        <h3 style="color:var(--azul-escuro);">⏳ Pomodoro</h3>
+        <div class="timer" id="pomodoroTimer">25:00</div>
+        <div class="controls">
+          <button id="pomoIniciar">▶ Iniciar</button>
+          <button id="pomoPausar" class="pausa">⏸ Pausar</button>
+          <button id="pomoResetar">🔄 Resetar</button>
+        </div>
+        <div class="sessao-info" id="pomoInfo">Pronto para estudar</div>
+        <div style="margin-top:16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <button data-pomo="25" class="btn" style="padding:6px 18px;">25 min</button>
+          <button data-pomo="50" class="btn" style="padding:6px 18px;">50 min</button>
+          <button data-pomo="5" class="btn" style="padding:6px 18px;">5 min (pausa)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÚSICA ================= -->
+    <section id="page-musica" class="page">
+      <div class="player-box">
+        <h4 style="color:var(--azul-escuro); margin-bottom:8px;">🎵 Foco e relaxamento</h4>
+        <div class="playlist-btns">
+          <button data-playlist="lofi">🎧 Lofi</button>
+          <button data-playlist="chuva">🌧️ Som da Chuva</button>
+          <button data-playlist="frequencia">🔊 Frequência Alpha</button>
+        </div>
+        <div id="playerWrapper">
+          <iframe id="youtubePlayer" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&loop=1&playlist=jfKfPfyJRdk" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <p style="font-size:0.8rem; color:var(--cinza-escuro); margin-top:6px;">Clique nas playlists para trocar. Use o player para controlar.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ============================================================
+    //  DADOS
+    // ============================================================
+    const disciplinas = [
+      { id: 'portugues', nome: 'Língua Portuguesa', topics: ['Compreensão textual', 'Morfologia', 'Sintaxe', 'Redação Oficial'] },
+      { id: 'logica', nome: 'Raciocínio Lógico', topics: ['Conjuntos', 'Proporções', 'Funções', 'Lógica proposicional'] },
+      { id: 'informatica', nome: 'Informática', topics: ['Windows 11', 'Pacote Office', 'Redes', 'Segurança'] },
+      { id: 'igualdade', nome: 'Igualdade Racial e Gênero', topics: ['Constituição', 'Estatuto da Igualdade', 'Lei Maria da Penha'] },
+      { id: 'medicina', nome: 'Medicina Legal', topics: ['Corpo de delito', 'Lesões', 'Asfixias', 'Cadeia de custódia'] },
+      { id: 'legislacao', nome: 'Legislação Geral', topics: ['Estatuto do Servidor', 'Lei Orgânica PC', 'Processo Administrativo'] },
+      { id: 'adm', nome: 'Dir. Administrativo', topics: ['Atos administrativos', 'Poderes', 'Licitações', 'Agentes públicos'] },
+      { id: 'constitucional', nome: 'Dir. Constitucional', topics: ['Direitos fundamentais', 'Organização do Estado', 'Segurança pública'] },
+      { id: 'penal', nome: 'Dir. Penal', topics: ['Teoria do crime', 'Culpabilidade', 'Concurso de crimes', 'Crimes em espécie'] },
+      { id: 'processo', nome: 'Dir. Processual Penal', topics: ['Inquérito', 'Ação penal', 'Provas', 'Prisões', 'Procedimentos'] },
+      { id: 'leg_extra', nome: 'Leg. Penal Extravagante', topics: ['Lei de Drogas', 'Maria da Penha', 'Crimes Hediondos', 'Abuso de Autoridade'] },
+      { id: 'estatistica', nome: 'Estatística', topics: ['Descritiva', 'Probabilidade', 'Amostragem', 'Teorema de Bayes'] }
+    ];
+
+    // Progresso (salvo em localStorage)
+    let progresso = JSON.parse(localStorage.getItem('pcba_progresso')) || {};
+    let simulados = JSON.parse(localStorage.getItem('pcba_simulados')) || [];
+
+    // Inicializa progresso para disciplinas que não existem
+    disciplinas.forEach(d => {
+      if (!progresso[d.id]) {
+        progresso[d.id] = { concluida: false, topics: {} };
+        d.topics.forEach(t => { progresso[d.id].topics[t] = false; });
+      }
+    });
+
+    // ============================================================
+    //  FUNÇÕES AUXILIARES
+    // ============================================================
+    function salvarProgresso() {
+      localStorage.setItem('pcba_progresso', JSON.stringify(progresso));
+    }
+
+    function salvarSimulados() {
+      localStorage.setItem('pcba_simulados', JSON.stringify(simulados));
+    }
+
+    function contarConcluidas() {
+      let c = 0;
+      for (let id in progresso) {
+        if (progresso[id].concluida) c++;
+      }
+      return c;
+    }
+
+    function calcularProgressoGeral() {
+      const total = disciplinas.length;
+      const concluidas = contarConcluidas();
+      return Math.round((concluidas / total) * 100);
+    }
+
+    function atualizarDashboard() {
+      const total = disciplinas.length;
+      const concluidas = contarConcluidas();
+      document.getElementById('discConcluidas').textContent = concluidas;
+      const pct = calcularProgressoGeral();
+      document.getElementById('progressoGeralNum').textContent = pct + '%';
+      document.getElementById('progressoGeralBar').style.width = pct + '%';
+      document.getElementById('simuladosFeitos').textContent = simulados.length;
+      let acertos = 0;
+      simulados.forEach(s => acertos += s.acertos || 0);
+      document.getElementById('acertosSimulados').textContent = acertos;
+
+      // Dias restantes
+      const hoje = new Date();
+      const prova = new Date(2026, 11, 6); // mês 11 = dezembro
+      const diff = Math.ceil((prova - hoje) / (1000 * 60 * 60 * 24));
+      document.getElementById('diasRestantes').textContent = diff > 0 ? diff : '0';
+
+      // Progresso por disciplina (lista)
+      const lista = document.getElementById('progressoDisciplinasLista');
+      lista.innerHTML = '';
+      disciplinas.forEach(d => {
+        const p = progresso[d.id];
+        const pctTopic = d.topics.length ? Object.values(p.topics).filter(v => v).length / d.topics.length * 100 : 0;
+        const div = document.createElement('div');
+        div.style.marginBottom = '8px';
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+            <span>${d.nome}</span>
+            <span>${Math.round(pctTopic)}%</span>
+          </div>
+          <div class="progress-bar" style="height:6px;">
+            <div class="fill" style="width:${pctTopic}%;"></div>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+
+      // Próximas metas (simples)
+      const metas = document.getElementById('proximasMetas');
+      metas.innerHTML = '';
+      const naoConcluidas = disciplinas.filter(d => !progresso[d.id].concluida);
+      if (naoConcluidas.length) {
+        const next = naoConcluidas[0];
+        metas.innerHTML += `<li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Estudar ${next.nome} - revisar tópicos</li>`;
+      }
+      metas.innerHTML += `<li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Simulado de ${disciplinas[Math.floor(Math.random()*disciplinas.length)].nome}</li>`;
+      metas.innerHTML += `<li style="padding:8px 0;">🔹 TAF: treino de corrida e flexões</li>`;
+    }
+
+    // ============================================================
+    //  RENDER DISCIPLINAS
+    // ============================================================
+    function renderDisciplinas() {
+      const grid = document.getElementById('disciplinasGrid');
+      grid.innerHTML = '';
+      disciplinas.forEach(d => {
+        const p = progresso[d.id];
+        const totalTopics = d.topics.length;
+        const concluidos = Object.values(p.topics).filter(v => v).length;
+        const pct = totalTopics ? Math.round((concluidos / totalTopics) * 100) : 0;
+
+        const card = document.createElement('div');
+        card.className = 'disciplina-card';
+        card.innerHTML = `
+          <div class="top">
+            <span class="nome">${d.nome}</span>
+            <input type="checkbox" class="check" ${p.concluida ? 'checked' : ''} data-id="${d.id}">
+          </div>
+          <div class="subtop">${concluidos}/${totalTopics} tópicos</div>
+          <div class="mini-progress"><div class="fill" style="width:${pct}%;"></div></div>
+          <div class="stats">
+            <span>${pct}%</span>
+            <span style="cursor:pointer; color:var(--azul-claro);" data-expand="${d.id}">▼ ver tópicos</span>
+          </div>
+          <div id="topics-${d.id}" style="display:none; margin-top:10px; padding-top:10px; border-top:1px solid #e2e8f0;">
+            ${d.topics.map(t => `
+              <label style="display:block; font-size:0.85rem; padding:4px 0;">
+                <input type="checkbox" ${p.topics[t] ? 'checked' : ''} data-disciplina="${d.id}" data-topic="${t}" class="topic-check">
+                ${t}
+              </label>
+            `).join('')}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Eventos
+      document.querySelectorAll('.check').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const id = this.dataset.id;
+          progresso[id].concluida = this.checked;
+          // Se marcou concluída, marca todos os tópicos como concluídos
+          if (this.checked) {
+            const d = disciplinas.find(d => d.id === id);
+            d.topics.forEach(t => { progresso[id].topics[t] = true; });
+          } else {
+            const d = disciplinas.find(d => d.id === id);
+            d.topics.forEach(t => { progresso[id].topics[t] = false; });
+          }
+          salvarProgresso();
+          renderDisciplinas();
+          atualizarDashboard();
+        });
+      });
+
+      document.querySelectorAll('.topic-check').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const disciplina = this.dataset.disciplina;
+          const topic = this.dataset.topic;
+          progresso[disciplina].topics[topic] = this.checked;
+          // Verifica se todos os tópicos estão marcados para atualizar concluida
+          const d = disciplinas.find(d => d.id === disciplina);
+          const allChecked = d.topics.every(t => progresso[disciplina].topics[t]);
+          progresso[disciplina].concluida = allChecked;
+          salvarProgresso();
+          renderDisciplinas();
+          atualizarDashboard();
+        });
+      });
+
+      // Expandir tópicos
+      document.querySelectorAll('[data-expand]').forEach(el => {
+        el.addEventListener('click', function() {
+          const id = this.dataset.expand;
+          const div = document.getElementById(`topics-${id}`);
+          if (div) {
+            div.style.display = div.style.display === 'none' ? 'block' : 'none';
+            this.textContent = div.style.display === 'none' ? '▼ ver tópicos' : '▲ ocultar tópicos';
+          }
+        });
+      });
+    }
+
+    // ============================================================
+    //  CRONOGRAMAS
+    // ============================================================
+    function gerarCronograma(tipo) {
+      const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const inicio = new Date(2026, 8, 9); // 09/09/2026
+      const fim = new Date(2026, 11, 6);
+      const diff = Math.ceil((fim - inicio) / (1000 * 60 * 60 * 24));
+      const dias = [];
+      for (let i = 0; i <= diff; i++) {
+        const d = new Date(inicio);
+        d.setDate(d.getDate() + i);
+        dias.push(d);
+      }
+
+      // Distribuição de disciplinas (prioridade para específicas)
+      const ordemFocado = ['penal', 'processo', 'leg_extra', 'adm', 'constitucional', 'portugues', 'logica', 'informatica', 'igualdade', 'medicina', 'legislacao', 'estatistica'];
+      // Completo: intercalar
+      const ordemCompleto = ['portugues', 'logica', 'informatica', 'igualdade', 'medicina', 'legislacao', 'adm', 'constitucional', 'penal', 'processo', 'leg_extra', 'estatistica'];
+
+      const ordem = tipo === 'focado' ? ordemFocado : ordemCompleto;
+      let idx = 0;
+      let crono = [];
+
+      // Separar domingos
+      const domingos = dias.filter(d => d.getDay() === 0);
+      const outros = dias.filter(d => d.getDay() !== 0);
+
+      // Para cada dia, atribuir uma disciplina (revisão a cada 4 dias)
+      const diasEstudo = outros.concat(domingos); // mas vamos colocar domingos como revisão no início
+
+      // Reorganizar: domingos primeiro com revisão
+      let diasOrdenados = [];
+      const doms = diasEstudo.filter(d => d.getDay() === 0);
+      const semDoms = diasEstudo.filter(d => d.getDay() !== 0);
+      // Intercalar: a cada semana, um domingo no início
+      // Vamos simplesmente construir uma lista: para cada semana, colocar domingo antes
+      const semanas = [];
+      let semanaAtual = [];
+      for (let d of diasEstudo) {
+        if (d.getDay() === 0 && semanaAtual.length > 0) {
+          semanas.push(semanaAtual);
+          semanaAtual = [];
+        }
+        semanaAtual.push(d);
+        if (d.getDay() === 6) { // sábado
+          semanas.push(semanaAtual);
+          semanaAtual = [];
+        }
+      }
+      if (semanaAtual.length) semanas.push(semanaAtual);
+
+      // Reorganizar cada semana: domingo primeiro, depois os outros
+      let diasReorganizados = [];
+      for (let semana of semanas) {
+        const dom = semana.find(d => d.getDay() === 0);
+        if (dom) diasReorganizados.push(dom);
+        for (let d of semana) {
+          if (d.getDay() !== 0) diasReorganizados.push(d);
+        }
+      }
+
+      // Agora atribuir disciplinas
+      for (let d of diasReorganizados) {
+        let disciplina;
+        let tipoDia = 'novo';
+        // Se for domingo, revisão
+        if (d.getDay() === 0) {
+          // Revisão: pegar a disciplina da semana anterior ou a próxima
+          const diaStr = d.toISOString().split('T')[0];
+          // Revisão da disciplina que caiu 2 dias atrás
+          const doisAtras = new Date(d);
+          doisAtras.setDate(d.getDate() - 2);
+          const discAnt = crono.find(c => c.data.toISOString().split('T')[0] === doisAtras.toISOString().split('T')[0]);
+          disciplina = discAnt ? discAnt.disciplina : ordem[idx % ordem.length];
+          tipoDia = 'revisao';
+        } else {
+          disciplina = ordem[idx % ordem.length];
+          idx++;
+          // A cada 4 dias, revisão
+          if (crono.length > 0 && crono.length % 4 === 0) {
+            // Mas vamos fazer revisão no domingo já
+          }
+        }
+        crono.push({ data: d, disciplina, tipo: tipoDia });
+      }
+
+      return crono;
+    }
+
+    function renderCronograma(tipo) {
+      const crono = gerarCronograma(tipo);
+      const container = document.getElementById('cronoContent');
+      let html = `<table><thead><tr><th>Data</th><th>Dia</th><th>Disciplina</th><th>Tipo</th></tr></thead><tbody>`;
+      crono.forEach(item => {
+        const dataStr = item.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const diaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][item.data.getDay()];
+        const discNome = disciplinas.find(d => d.id === item.disciplina)?.nome || item.disciplina;
+        const tag = item.tipo === 'revisao' ? '<span class="tag revisao">REVISÃO</span>' : '<span class="tag novo">NOVO</span>';
+        html += `<tr><td>${dataStr}</td><td>${diaSemana}</td><td>${discNome}</td><td>${tag}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // ============================================================
+    //  SIMULADOS
+    // ============================================================
+    // Banco de questões fictício (estilo AOCP)
+    const questoesBanco = {
+      portugues: [
+        { pergunta: 'Assinale a alternativa em que a palavra está corretamente acentuada:', opcoes: ['a) idéia', 'b) saúva', 'c) hífen', 'd) juízes', 'e) heroico'], correta: 3 },
+        { pergunta: 'Qual a função do "se" em "Vende-se esta casa"?', opcoes: ['a) pronome reflexivo', 'b) partícula apassivadora', 'c) índice de indeterminação do sujeito', 'd) conjunção condicional', 'e) pronome recíproco'], correta: 1 },
+        { pergunta: 'Em "O menino comeu o bolo", o termo "o bolo" é:', opcoes: ['a) sujeito', 'b) objeto direto', 'c) objeto indireto', 'd) complemento nominal', 'e) adjunto adverbial'], correta: 1 },
+        { pergunta: 'Assinale a opção em que a regência verbal está correta:', opcoes: ['a) Obedeceu o regulamento.', 'b) Pagamos o funcionário.', 'c) Assistimos o filme.', 'd) Preferiu ficar do que sair.', 'e) Ele namora com ela.'], correta: 1 },
+        { pergunta: 'Qual figura de linguagem em "A vida é uma nuvem"?', opcoes: ['a) metáfora', 'b) comparação', 'c) personificação', 'd) hipérbole', 'e) eufemismo'], correta: 0 }
+      ],
+      logica: [
+        { pergunta: 'Se todos os gatos são felinos e alguns felinos são animais, então:', opcoes: ['a) todos os gatos são animais', 'b) alguns animais são gatos', 'c) nenhum gato é animal', 'd) todos os felinos são gatos', 'e) alguns gatos não são felinos'], correta: 0 },
+        { pergunta: 'Qual a negação de "Todos os policiais são honestos"?', opcoes: ['a) Nenhum policial é honesto', 'b) Algum policial não é honesto', 'c) Todos os policiais são desonestos', 'd) Alguns policiais são honestos', 'e) Nenhuma das anteriores'], correta: 1 },
+        { pergunta: 'Se A = {1,2,3} e B = {2,3,4}, qual é A ∩ B?', opcoes: ['a) {1,2,3,4}', 'b) {2,3}', 'c) {1,4}', 'd) {1,2}', 'e) {3,4}'], correta: 1 },
+        { pergunta: 'Se 3x + 5 = 20, qual o valor de x?', opcoes: ['a) 3', 'b) 5', 'c) 7', 'd) 10', 'e) 15'], correta: 1 },
+        { pergunta: 'Qual a probabilidade de sair cara em 3 lançamentos de uma moeda?', opcoes: ['a) 1/2', 'b) 1/4', 'c) 1/8', 'd) 3/8', 'e) 1/3'], correta: 0 }
+      ],
+      informatica: [
+        { pergunta: 'No Windows 11, qual atalho abre o Gerenciador de Tarefas?', opcoes: ['a) Ctrl+Alt+Esc', 'b) Ctrl+Shift+Esc', 'c) Ctrl+Alt+Delete', 'd) Windows+Esc', 'e) Alt+F4'], correta: 1 },
+        { pergunta: 'No Excel, qual função soma um intervalo?', opcoes: ['a) SUM', 'b) SOMA', 'c) ADICIONAR', 'd) TOTAL', 'e) SOMASE'], correta: 0 },
+        { pergunta: 'O que é um firewall?', opcoes: ['a) Antivírus', 'b) Barreira de proteção de rede', 'c) Navegador', 'd) Sistema operacional', 'e) Editor de texto'], correta: 1 },
+        { pergunta: 'Qual protocolo é usado para envio de e-mails?', opcoes: ['a) HTTP', 'b) FTP', 'c) SMTP', 'd) POP3', 'e) IMAP'], correta: 2 },
+        { pergunta: 'O que é phishing?', opcoes: ['a) Vírus de computador', 'b) Técnica de engenharia social para roubar dados', 'c) Firewall', 'd) Backup', 'e) Criptografia'], correta: 1 }
+      ],
+      igualdade: [
+        { pergunta: 'A Lei Maria da Penha (11.340/2006) protege mulheres em situação de violência:', opcoes: ['a) doméstica e familiar', 'b) apenas no trabalho', 'c) apenas na rua', 'd) apenas virtual', 'e) apenas sexual'], correta: 0 },
+        { pergunta: 'O Estatuto da Igualdade Racial (12.288/2010) define como população negra:', opcoes: ['a) apenas pretos', 'b) pretos e pardos', 'c) apenas pardos', 'd) indígenas e negros', 'e) todas as minorias'], correta: 1 },
+        { pergunta: 'A Constituição Federal de 1988, no art. 5º, garante a igualdade:', opcoes: ['a) de todos perante a lei', 'b) apenas entre homens', 'c) apenas entre brasileiros', 'd) apenas entre mulheres', 'e) apenas entre negros'], correta: 0 },
+        { pergunta: 'O racismo é crime inafiançável e imprescritível, conforme:', opcoes: ['a) Lei 7.716/1989', 'b) Código Penal', 'c) Lei de Tortura', 'd) Estatuto do Idoso', 'e) Lei de Drogas'], correta: 0 },
+        { pergunta: 'A Convenção sobre a Eliminação da Discriminação Racial foi internalizada pelo Decreto:', opcoes: ['a) 65.810/1969', 'b) 4.377/2002', 'c) 3.298/1999', 'd) 6.949/2009', 'e) 5.296/2004'], correta: 0 }
+      ],
+      medicina: [
+        { pergunta: 'O que é corpo de delito?', opcoes: ['a) O cadáver', 'b) O conjunto de vestígios materiais do crime', 'c) O laudo pericial', 'd) A confissão', 'e) A testemunha'], correta: 1 },
+        { pergunta: 'A asfixia por constrição cervical é chamada de:', opcoes: ['a) estrangulamento', 'b) sufocação', 'c) enforcamento', 'd) esganadura', 'e) afogamento'], correta: 3 },
+        { pergunta: 'Qual a diferença entre lesão contundente e cortante?', opcoes: ['a) A contundente é causada por objeto rombo', 'b) A cortante é causada por objeto rombo', 'c) Ambas são iguais', 'd) A contundente é superficial', 'e) A cortante é sempre mais grave'], correta: 0 },
+        { pergunta: 'A cadeia de custódia da prova é regulada pela:', opcoes: ['a) Lei 12.037/2009', 'b) Lei 13.964/2019', 'c) Lei 12.830/2013', 'd) Lei 9.807/1999', 'e) Lei 11.343/2006'], correta: 1 },
+        { pergunta: 'O que é cronotanatognose?', opcoes: ['a) Estudo da hora da morte', 'b) Estudo da causa da morte', 'c) Estudo do local da morte', 'd) Estudo da identidade', 'e) Estudo da arma do crime'], correta: 0 }
+      ],
+      legislacao: [
+        { pergunta: 'O Estatuto do Servidor Público da Bahia é a Lei Estadual:', opcoes: ['a) 6.677/1994', 'b) 7.146/1997', 'c) 11.370/2009', 'd) 12.209/2011', 'e) 13.810/2017'], correta: 0 },
+        { pergunta: 'A Lei Orgânica da Polícia Civil da Bahia é a:', opcoes: ['a) 11.370/2009', 'b) 6.677/1994', 'c) 12.209/2011', 'd) 13.182/2014', 'e) 14.634/2023'], correta: 0 },
+        { pergunta: 'O processo administrativo disciplinar na Bahia é regido pela Lei:', opcoes: ['a) 12.209/2011', 'b) 11.370/2009', 'c) 6.677/1994', 'd) 13.810/2017', 'e) 14.634/2023'], correta: 0 },
+        { pergunta: 'A Lei de Licitações da Bahia é a:', opcoes: ['a) 14.634/2023', 'b) 14.133/2021 (Federal)', 'c) 8.666/1993', 'd) 10.520/2002', 'e) 12.209/2011'], correta: 0 },
+        { pergunta: 'O prazo de validade do concurso público, conforme edital, é de:', opcoes: ['a) 1 ano', 'b) 2 anos', 'c) 3 anos', 'd) 4 anos', 'e) 5 anos'], correta: 1 }
+      ],
+      adm: [
+        { pergunta: 'Os princípios da Administração Pública expressos na CF/88 são:', opcoes: ['a) legalidade, impessoalidade, moralidade, publicidade e eficiência', 'b) legalidade, finalidade, motivação e razoabilidade', 'c) hierarquia, disciplina e poder de polícia', 'd) centralização, descentralização e concentração', 'e) todos os anteriores'], correta: 0 },
+        { pergunta: 'Ato administrativo que extingue um ato por motivo de mérito é:', opcoes: ['a) anulação', 'b) revogação', 'c) cassação', 'd) convalidação', 'e) caducidade'], correta: 1 },
+        { pergunta: 'A licitação na modalidade pregão é destinada a:', opcoes: ['a) obras', 'b) serviços comuns', 'c) compras de alto valor', 'd) concessões', 'e) parcerias'], correta: 1 },
+        { pergunta: 'A responsabilidade civil do Estado é objetiva, conforme:', opcoes: ['a) art. 37, §6º, CF', 'b) art. 5º, LXXV, CF', 'c) art. 1º, Lei 8.429/1992', 'd) art. 2º, Lei 9.784/1999', 'e) art. 3º, Lei 11.370/2009'], correta: 0 },
+        { pergunta: 'O poder de polícia é uma atividade:', opcoes: ['a) discricionária e vinculada', 'b) limitadora e fiscalizadora', 'c) apenas vinculada', 'd) apenas discricionária', 'e) não administrativa'], correta: 1 }
+      ],
+      constitucional: [
+        { pergunta: 'São direitos fundamentais previstos na CF/88:', opcoes: ['a) vida, liberdade, igualdade, segurança e propriedade', 'b) apenas vida e liberdade', 'c) apenas igualdade', 'd) apenas propriedade', 'e) apenas segurança'], correta: 0 },
+        { pergunta: 'A organização político-administrativa do Brasil compreende:', opcoes: ['a) União, Estados, Distrito Federal e Municípios', 'b) União e Estados apenas', 'c) apenas Municípios', 'd) Distrito Federal e Estados', 'e) União e Municípios'], correta: 0 },
+        { pergunta: 'A segurança pública é dever do Estado, direito e responsabilidade de todos, conforme:', opcoes: ['a) art. 144, CF', 'b) art. 5º, CF', 'c) art. 37, CF', 'd) art. 1º, CF', 'e) art. 3º, CF'], correta: 0 },
+        { pergunta: 'A perda de direitos políticos ocorre em caso de:', opcoes: ['a) incapacidade civil absoluta', 'b) condenação criminal transitada em julgado', 'c) improbidade administrativa', 'd) todas as anteriores', 'e) apenas A e B'], correta: 3 },
+        { pergunta: 'O mandado de segurança é um remédio constitucional para proteger:', opcoes: ['a) direito líquido e certo', 'b) direito coletivo', 'c) direito difuso', 'd) direito individual', 'e) qualquer direito'], correta: 0 }
+      ],
+      penal: [
+        { pergunta: 'O crime doloso ocorre quando o agente:', opcoes: ['a) quer o resultado ou assume o risco', 'b) não quer o resultado', 'c) age com imprudência', 'd) age com negligência', 'e) age com imperícia'], correta: 0 },
+        { pergunta: 'A legítima defesa é causa de:', opcoes: ['a) exclusão da ilicitude', 'b) exclusão da culpabilidade', 'c) exclusão da tipicidade', 'd) aumento de pena', 'e) diminuição de pena'], correta: 0 },
+        { pergunta: 'O crime de furto é tipificado no art. 155 do CP e a pena é:', opcoes: ['a) reclusão de 1 a 4 anos', 'b) detenção de 1 a 3 anos', 'c) reclusão de 2 a 5 anos', 'd) detenção de 2 a 4 anos', 'e) multa'], correta: 0 },
+        { pergunta: 'A prescrição da pretensão punitiva é regulada pelo:', opcoes: ['a) Código Penal', 'b) Código de Processo Penal', 'c) Lei de Execução Penal', 'd) Constituição Federal', 'e) Lei 9.099/1995'], correta: 0 },
+        { pergunta: 'O concurso de crimes pode ser material, formal ou:', opcoes: ['a) crime continuado', 'b) crime habitual', 'c) crime permanente', 'd) crime instantâneo', 'e) crime de dano'], correta: 0 }
+      ],
+      processo: [
+        { pergunta: 'O inquérito policial é presidido pelo:', opcoes: ['a) Delegado de Polícia', 'b) Juiz', 'c) Promotor de Justiça', 'd) Defensor Público', 'e) Advogado'], correta: 0 },
+        { pergunta: 'A prisão em flagrante deve ser comunicada ao juiz em até:', opcoes: ['a) 24 horas', 'b) 48 horas', 'c) 72 horas', 'd) 12 horas', 'e) 96 horas'], correta: 0 },
+        { pergunta: 'A ação penal pública é iniciada por:', opcoes: ['a) queixa-crime', 'b) denúncia', 'c) representação', 'd) notícia-crime', 'e) inquérito'], correta: 1 },
+        { pergunta: 'A prova ilícita é inadmissível no processo, conforme:', opcoes: ['a) art. 5º, LVI, CF', 'b) art. 5º, LV, CF', 'c) art. 3º, CPP', 'd) art. 157, CPP', 'e) art. 386, CPP'], correta: 0 },
+        { pergunta: 'O procedimento comum ordinário é aplicado a crimes com pena:', opcoes: ['a) máxima superior a 4 anos', 'b) máxima igual ou inferior a 4 anos', 'c) superior a 2 anos', 'd) igual ou inferior a 2 anos', 'e) qualquer pena'], correta: 0 }
+      ],
+      leg_extra: [
+        { pergunta: 'A Lei 11.343/2006 (Lei de Drogas) prevê penas para o tráfico de:', opcoes: ['a) reclusão de 5 a 15 anos', 'b) reclusão de 3 a 10 anos', 'c) reclusão de 8 a 20 anos', 'd) detenção de 2 a 5 anos', 'e) reclusão de 4 a 12 anos'], correta: 0 },
+        { pergunta: 'A Lei Maria da Penha (11.340/2006) criou os Juizados de Violência Doméstica e Familiar contra a Mulher:', opcoes: ['a) especializados', 'b) criminais comuns', 'c) cíveis', 'd) federais', 'e) trabalhistas'], correta: 0 },
+        { pergunta: 'A Lei de Abuso de Autoridade (13.869/2019) define como crime:', opcoes: ['a) praticar violência no exercício da função', 'b) decretar prisão sem fundamento', 'c) constranger com abuso', 'd) todas as anteriores', 'e) apenas A e B'], correta: 3 },
+        { pergunta: 'A Lei de Organizações Criminosas (12.850/2013) prevê a:', opcoes: ['a) colaboração premiada', 'b) interceptação telefônica', 'c) prisão preventiva', 'd) todas as anteriores', 'e) apenas A e B'], correta: 3 },
+        { pergunta: 'A Lei de Lavagem de Dinheiro (9.613/1998) prevê pena de:', opcoes: ['a) reclusão de 3 a 10 anos', 'b) reclusão de 1 a 5 anos', 'c) reclusão de 5 a 15 anos', 'd) detenção de 2 a 6 anos', 'e) multa'], correta: 0 }
+      ],
+      estatistica: [
+        { pergunta: 'A média aritmética de 2, 4, 6, 8 é:', opcoes: ['a) 4', 'b) 5', 'c) 6', 'd) 7', 'e) 8'], correta: 1 },
+        { pergunta: 'A mediana de 1, 3, 3, 6, 7, 8, 9 é:', opcoes: ['a) 3', 'b) 6', 'c) 7', 'd) 5', 'e) 4'], correta: 1 },
+        { pergunta: 'A probabilidade de sair um número par no dado é:', opcoes: ['a) 1/2', 'b) 1/3', 'c) 1/6', 'd) 2/3', 'e) 5/6'], correta: 0 },
+        { pergunta: 'A amostragem aleatória simples é caracterizada por:', opcoes: ['a) sorteio aleatório', 'b) divisão em estratos', 'c) seleção sistemática', 'd) conglomerados', 'e) todos os anteriores'], correta: 0 },
+        { pergunta: 'O desvio padrão mede a:', opcoes: ['a) dispersão', 'b) tendência central', 'c) assimetria', 'd) curtose', 'e) correlação'], correta: 0 }
+      ]
+    };
+
+    function gerarSimulado(disciplinaId) {
+      const container = document.getElementById('simuladoQuestoes');
+      const feedback = document.getElementById('simuladoFeedback');
+      feedback.style.display = 'none';
+
+      let questoes = [];
+      if (disciplinaId === 'todas') {
+        for (let key in questoesBanco) {
+          questoes = questoes.concat(questoesBanco[key].slice(0, 2)); // pega 2 de cada
+        }
+      } else {
+        questoes = questoesBanco[disciplinaId] || [];
+      }
+
+      if (questoes.length === 0) {
+        container.innerHTML = '<p style="color:var(--cinza-escuro);">Nenhuma questão disponível para esta disciplina.</p>';
+        return;
+      }
+
+      // Embaralhar e selecionar no máximo 10
+      questoes = questoes.sort(() => Math.random() - 0.5).slice(0, 10);
+
+      let html = `<p style="font-weight:500; margin-bottom:10px;">Responda as questões:</p>`;
+      questoes.forEach((q, idx) => {
+        html += `<div class="pergunta">${idx+1}. ${q.pergunta}</div>`;
+        html += `<div class="opcoes">`;
+        q.opcoes.forEach((op, oi) => {
+          html += `<label><input type="radio" name="q${idx}" value="${oi}"> ${op}</label>`;
+        });
+        html += `</div>`;
+      });
+      html += `<button class="btn" id="btnCorrigirSimulado">Corrigir Simulado</button>`;
+      container.innerHTML = html;
+
+      document.getElementById('btnCorrigirSimulado').addEventListener('click', function() {
+        let acertos = 0;
+        let total = questoes.length;
+        let respostas = [];
+        for (let i = 0; i < total; i++) {
+          const radios = document.querySelectorAll(`input[name="q${i}"]`);
+          let selecionado = null;
+          radios.forEach(r => { if (r.checked) selecionado = parseInt(r.value); });
+          const correta = questoes[i].correta;
+          const acertou = (selecionado === correta);
+          if (acertou) acertos++;
+          respostas.push({ questao: questoes[i].pergunta, selecionado, correta, acertou });
+        }
+
+        // Salvar simulado
+        simulados.push({ data: new Date().toLocaleDateString(), disciplina: disciplinaId, acertos, total });
+        salvarSimulados();
+        atualizarDashboard();
+
+        // Feedback
+        feedback.style.display = 'block';
+        let msg = `Você acertou ${acertos} de ${total} questões (${Math.round(acertos/total*100)}%).`;
+        if (acertos === total) msg += ' 🎉 Parabéns, gabaritou!';
+        else if (acertos >= total * 0.7) msg += ' ✅ Bom desempenho! Continue assim.';
+        else msg += ' 📚 Revise os tópicos com mais atenção.';
+
+        let detalhes = '<ul style="margin-top:8px; list-style:none; padding:0;">';
+        respostas.forEach((r, idx) => {
+          const emoji = r.acertou ? '✅' : '❌';
+          detalhes += `<li style="padding:4px 0; border-bottom:1px solid #eee;">${emoji} ${r.questao.substring(0,50)}... (correta: ${r.correta+1})</li>`;
+        });
+        detalhes += '</ul>';
+        feedback.innerHTML = `<strong>${msg}</strong>${detalhes}`;
+
+        // Atualizar histórico
+        atualizarHistoricoSimulados();
+      });
+    }
+
+    function atualizarHistoricoSimulados() {
+      const div = document.getElementById('historicoSimulados');
+      if (simulados.length === 0) {
+        div.innerHTML = 'Nenhum simulado realizado ainda.';
+        return;
+      }
+      let html = '<ul style="list-style:none; padding:0;">';
+      simulados.slice().reverse().forEach(s => {
+        const discNome = disciplinas.find(d => d.id === s.disciplina)?.nome || s.disciplina;
+        html += `<li style="padding:6px 0; border-bottom:1px solid #e2e8f0;">📌 ${s.data} - ${discNome}: ${s.acertos}/${s.total} (${Math.round(s.acertos/s.total*100)}%)</li>`;
+      });
+      html += '</ul>';
+      div.innerHTML = html;
+    }
+
+    // ============================================================
+    //  TAF
+    // ============================================================
+    function renderTAF() {
+      const grid = document.getElementById('tafGrid');
+      const treinos = [
+        { dia: 'Segunda', treino: 'Corrida 3km + Flexões 3x10', feito: false },
+        { dia: 'Terça', treino: 'Abdominais 3x15 + Barra fixa 3x5', feito: false },
+        { dia: 'Quarta', treino: 'Corrida 4km + Flexões 3x12', feito: false },
+        { dia: 'Quinta', treino: 'Abdominais 3x20 + Agachamento 3x15', feito: false },
+        { dia: 'Sexta', treino: 'Corrida 5km + Flexões 3x15', feito: false },
+        { dia: 'Sábado', treino: 'Descanso ativo (caminhada 30min)', feito: false },
+        { dia: 'Domingo', treino: 'Alongamento e revisão de metas', feito: false }
+      ];
+      grid.innerHTML = '';
+      treinos.forEach((t, idx) => {
+        const card = document.createElement('div');
+        card.className = 'taf-card';
+        card.innerHTML = `
+          <div class="dia">${t.dia}</div>
+          <div class="treino">${t.treino}</div>
+          <div class="check">
+            <label><input type="checkbox" class="taf-check" data-idx="${idx}"> Concluído</label>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Carregar estado do TAF
+      const tafState = JSON.parse(localStorage.getItem('pcba_taf')) || {};
+      document.querySelectorAll('.taf-check').forEach(cb => {
+        const idx = cb.dataset.idx;
+        cb.checked = tafState[idx] || false;
+        cb.addEventListener('change', function() {
+          const state = JSON.parse(localStorage.getItem('pcba_taf')) || {};
+          state[idx] = this.checked;
+          localStorage.setItem('pcba_taf', JSON.stringify(state));
+        });
+      });
+    }
+
+    // ============================================================
+    //  POMODORO
+    // ============================================================
+    let pomoTempo = 25 * 60;
+    let pomoAtivo = false;
+    let pomoInterval = null;
+    let pomoRestante = pomoTempo;
+    let pomoPausa = false;
+
+    function atualizarPomoDisplay() {
+      const min = Math.floor(pomoRestante / 60);
+      const seg = pomoRestante % 60;
+      document.getElementById('pomodoroTimer').textContent = `${String(min).padStart(2,'0')}:${String(seg).padStart(2,'0')}`;
+    }
+
+    function iniciarPomo() {
+      if (pomoInterval) return;
+      if (pomoRestante <= 0) {
+        pomoRestante = pomoTempo;
+      }
+      pomoAtivo = true;
+      document.getElementById('pomoInfo').textContent = '⏳ Estudando...';
+      pomoInterval = setInterval(() => {
+        if (pomoRestante <= 0) {
+          clearInterval(pomoInterval);
+          pomoInterval = null;
+          pomoAtivo = false;
+          document.getElementById('pomoInfo').textContent = '🔔 Pausa! Relaxe 5 min.';
+          // Inicia pausa automática de 5 min?
+          // Vamos tocar um som? (opcional)
+          return;
+        }
+        pomoRestante--;
+        atualizarPomoDisplay();
+      }, 1000);
+    }
+
+    function pausarPomo() {
+      if (pomoInterval) {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        pomoAtivo = false;
+        document.getElementById('pomoInfo').textContent = '⏸ Pausado';
+      }
+    }
+
+    function resetarPomo() {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      pomoAtivo = false;
+      pomoRestante = pomoTempo;
+      atualizarPomoDisplay();
+      document.getElementById('pomoInfo').textContent = 'Pronto para estudar';
+    }
+
+    function configurarPomo(minutos) {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      pomoAtivo = false;
+      pomoTempo = minutos * 60;
+      pomoRestante = pomoTempo;
+      atualizarPomoDisplay();
+      document.getElementById('pomoInfo').textContent = `Configurado para ${minutos} min`;
+    }
+
+    // ============================================================
+    //  PLAYER
+    // ============================================================
+    const playlists = {
+      lofi: 'jfKfPfyJRdk',
+      chuva: '6yE4kPfP-5Q',
+      frequencia: 'S9V9u9O3N-Q'
+    };
+
+    function trocarPlaylist(nome) {
+      const id = playlists[nome];
+      if (id) {
+        document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}`;
+      }
+    }
+
+    // ============================================================
+    //  NAVEGAÇÃO
+    // ============================================================
+    document.querySelectorAll('#navPrincipal button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#navPrincipal button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const page = this.dataset.page;
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`page-${page}`).classList.add('active');
+
+        // Se for cronogramas, renderizar
+        if (page === 'cronogramas') {
+          const tipo = document.querySelector('.crono-tabs .active')?.dataset.crono || 'focado';
+          renderCronograma(tipo);
+        }
+        if (page === 'simulados') {
+          atualizarHistoricoSimulados();
+          // popular select
+          const select = document.getElementById('selectSimulado');
+          select.innerHTML = '<option value="todas">Todas as disciplinas</option>';
+          disciplinas.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = d.nome;
+            select.appendChild(opt);
+          });
+        }
+        if (page === 'taf') {
+          renderTAF();
+        }
+      });
+    });
+
+    // Tabs cronogramas
+    document.querySelectorAll('.crono-tabs button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.crono-tabs button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        renderCronograma(this.dataset.crono);
+      });
+    });
+
+    // Botão gerar simulado
+    document.getElementById('btnGerarSimulado').addEventListener('click', function() {
+      const disciplina = document.getElementById('selectSimulado').value;
+      gerarSimulado(disciplina);
+    });
+
+    // Pomodoro
+    document.getElementById('pomoIniciar').addEventListener('click', iniciarPomo);
+    document.getElementById('pomoPausar').addEventListener('click', pausarPomo);
+    document.getElementById('pomoResetar').addEventListener('click', resetarPomo);
+    document.querySelectorAll('[data-pomo]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        configurarPomo(parseInt(this.dataset.pomo));
+      });
+    });
+
+    // Player
+    document.querySelectorAll('[data-playlist]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        trocarPlaylist(this.dataset.playlist);
+      });
+    });
+
+    // ============================================================
+    //  INICIALIZAÇÃO
+    // ============================================================
+    function init() {
+      renderDisciplinas();
+      atualizarDashboard();
+      renderCronograma('focado');
+      atualizarHistoricoSimulados();
+      renderTAF();
+      // Pomodoro inicial
+      configurarPomo(25);
+      // Select simulado
+      const select = document.getElementById('selectSimulado');
+      select.innerHTML = '<option value="todas">Todas as disciplinas</option>';
+      disciplinas.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.nome;
+        select.appendChild(opt);
+      });
+      // Player inicial
+      trocarPlaylist('lofi');
+      // Dias restantes
+      atualizarDashboard();
+    }
+
+    init();
+
+    // Atualizar dashboard periodicamente
+    setInterval(atualizarDashboard, 60000);
+  </script>
+
+</body>
+</html>

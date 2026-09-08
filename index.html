@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Investigador PCBA</title>
+  <title>PCBA - Investigador</title>
   <style>
     * {
       margin: 0;
@@ -29,6 +29,100 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+
+    /* LOGIN */
+    #login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: var(--azul-escuro);
+      background-image: radial-gradient(circle at 10% 30%, #1a4b7a, #0a2f5a);
+    }
+
+    .login-box {
+      background: var(--branco);
+      border-radius: 24px;
+      padding: 40px 48px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .login-box h1 {
+      color: var(--azul-escuro);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .login-box .sub {
+      color: var(--cinza-escuro);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #d0d7e0;
+      border-radius: 40px;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .login-box input:focus {
+      border-color: var(--azul-claro);
+      box-shadow: 0 0 0 3px rgba(58, 123, 181, 0.2);
+    }
+
+    .login-box .btn-login {
+      background: var(--azul-escuro);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+    }
+
+    .login-box .btn-login:hover {
+      background: var(--azul-medio);
+    }
+
+    .login-box .error {
+      color: #c53030;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .login-box .perfis-sugeridos {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--cinza-escuro);
+    }
+
+    .login-box .perfis-sugeridos span {
+      display: inline-block;
+      background: var(--cinza);
+      padding: 4px 14px;
+      border-radius: 30px;
+      margin: 4px 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .login-box .perfis-sugeridos span:hover {
+      background: var(--azul-claro);
+      color: white;
     }
 
     /* HEADER */
@@ -70,6 +164,7 @@
       display: flex;
       align-items: center;
       gap: 20px;
+      flex-wrap: wrap;
     }
 
     .header .user-info .badge {
@@ -79,6 +174,22 @@
       border-radius: 30px;
       font-weight: 600;
       font-size: 0.8rem;
+    }
+
+    .header .user-info .trocar-perfil {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .header .user-info .trocar-perfil:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: white;
     }
 
     /* NAV */
@@ -135,14 +246,8 @@
     }
 
     @keyframes fade {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* CARDS */
@@ -186,7 +291,6 @@
       color: #5a6a7a;
     }
 
-    /* PROGRESS BAR */
     .progress-container {
       background: var(--branco);
       border-radius: 16px;
@@ -220,7 +324,6 @@
       transition: width 0.4s;
     }
 
-    /* DISCIPLINAS */
     .disciplinas-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -285,7 +388,6 @@
       margin-top: 6px;
     }
 
-    /* CRONOGRAMA */
     .crono-tabs {
       display: flex;
       gap: 10px;
@@ -363,7 +465,6 @@
       color: #065f46;
     }
 
-    /* SIMULADOS */
     .simulador-box {
       background: var(--branco);
       border-radius: 16px;
@@ -421,7 +522,6 @@
       border-left: 6px solid var(--azul-claro);
     }
 
-    /* POMODORO */
     .pomodoro {
       background: var(--branco);
       border-radius: 16px;
@@ -467,7 +567,6 @@
       font-size: 0.95rem;
     }
 
-    /* PLAYER */
     .player-box {
       background: var(--branco);
       border-radius: 16px;
@@ -506,7 +605,6 @@
       color: white;
     }
 
-    /* TAF */
     .taf-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -536,7 +634,6 @@
       margin-top: 10px;
     }
 
-    /* RESPONSIVO */
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
@@ -566,6 +663,9 @@
       .pomodoro .timer {
         font-size: 3rem;
       }
+      .login-box {
+        padding: 30px 24px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -574,7 +674,6 @@
       }
     }
 
-    /* scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -587,193 +686,217 @@
       border-radius: 10px;
     }
 
-    /* utils */
-    .mt-20 {
-      margin-top: 20px;
-    }
-    .mb-20 {
-      margin-bottom: 20px;
-    }
-    .text-center {
-      text-align: center;
-    }
+    .mt-20 { margin-top: 20px; }
+    .mb-20 { margin-bottom: 20px; }
+    .text-center { text-align: center; }
     .flex-between {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
     }
+
+    /* esconder dashboard até login */
+    #app {
+      display: none;
+    }
+
+    #login-container {
+      display: flex;
+    }
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo">
+  <!-- LOGIN -->
+  <div id="login-container">
+    <div class="login-box">
       <h1>🔹 PCBA</h1>
-      <span>Investigador</span>
+      <p class="sub">Investigador de Polícia Civil</p>
+      <input type="text" id="nomePerfil" placeholder="Digite seu nome (Everton ou Thiago)" autofocus>
+      <button class="btn-login" id="btnEntrar">Entrar</button>
+      <div class="error" id="loginError">Perfil não encontrado. Tente novamente.</div>
+      <div class="perfis-sugeridos">
+        <span onclick="preencherPerfil('Everton')">Everton</span>
+        <span onclick="preencherPerfil('Thiago')">Thiago</span>
+        <span style="font-size:0.7rem; opacity:0.7; display:block; margin-top:10px;">(Thiago será criado automaticamente)</span>
+      </div>
     </div>
-    <div class="user-info">
-      <span>📅 Prova: 06/12/2026</span>
-      <span class="badge">Meta: 70%</span>
-    </div>
-  </header>
+  </div>
 
-  <!-- NAV -->
-  <nav class="nav" id="navPrincipal">
-    <button class="active" data-page="dashboard">📊 Dashboard</button>
-    <button data-page="cronogramas">📅 Cronogramas</button>
-    <button data-page="disciplinas">📚 Disciplinas</button>
-    <button data-page="simulados">🧪 Simulados</button>
-    <button data-page="taf">🏃 TAF</button>
-    <button data-page="pomodoro">⏳ Pomodoro</button>
-    <button data-page="musica">🎵 Música</button>
-  </nav>
+  <!-- APP -->
+  <div id="app">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">
+        <h1>🔹 PCBA</h1>
+        <span>Investigador</span>
+      </div>
+      <div class="user-info">
+        <span id="perfilNome">Perfil</span>
+        <span class="badge">Meta: 70%</span>
+        <button class="trocar-perfil" id="btnTrocarPerfil">↻ Trocar perfil</button>
+      </div>
+    </header>
 
-  <!-- MAIN -->
-  <main class="main">
+    <!-- NAV -->
+    <nav class="nav" id="navPrincipal">
+      <button class="active" data-page="dashboard">📊 Dashboard</button>
+      <button data-page="cronogramas">📅 Cronogramas</button>
+      <button data-page="disciplinas">📚 Disciplinas</button>
+      <button data-page="simulados">🧪 Simulados</button>
+      <button data-page="taf">🏃 TAF</button>
+      <button data-page="pomodoro">⏳ Pomodoro</button>
+      <button data-page="musica">🎵 Música</button>
+    </nav>
 
-    <!-- ================= DASHBOARD ================= -->
-    <section id="page-dashboard" class="page active">
-      <div class="card-grid">
-        <div class="card">
-          <div class="label">Disciplinas</div>
-          <div class="value" id="totalDisciplinas">12</div>
-          <div class="sub">concluídas: <span id="discConcluidas">0</span></div>
-        </div>
-        <div class="card">
-          <div class="label">Progresso Geral</div>
-          <div class="value" id="progressoGeralNum">0%</div>
-          <div class="progress-bar" style="margin-top:8px; height:8px;">
-            <div class="fill" id="progressoGeralBar" style="width:0%"></div>
+    <!-- MAIN -->
+    <main class="main">
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page active">
+        <div class="card-grid">
+          <div class="card">
+            <div class="label">Disciplinas</div>
+            <div class="value" id="totalDisciplinas">12</div>
+            <div class="sub">concluídas: <span id="discConcluidas">0</span></div>
+          </div>
+          <div class="card">
+            <div class="label">Progresso Geral</div>
+            <div class="value" id="progressoGeralNum">0%</div>
+            <div class="progress-bar" style="margin-top:8px; height:8px;">
+              <div class="fill" id="progressoGeralBar" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="label">Simulados</div>
+            <div class="value" id="simuladosFeitos">0</div>
+            <div class="sub">acertos: <span id="acertosSimulados">0</span></div>
+          </div>
+          <div class="card">
+            <div class="label">Dias até a prova</div>
+            <div class="value" id="diasRestantes">--</div>
+            <div class="sub">foco total!</div>
           </div>
         </div>
-        <div class="card">
-          <div class="label">Simulados</div>
-          <div class="value" id="simuladosFeitos">0</div>
-          <div class="sub">acertos: <span id="acertosSimulados">0</span></div>
+
+        <div class="progress-container">
+          <h3>📈 Progresso por Disciplina</h3>
+          <div id="progressoDisciplinasLista"></div>
         </div>
-        <div class="card">
-          <div class="label">Dias até a prova</div>
-          <div class="value" id="diasRestantes">--</div>
-          <div class="sub">foco total!</div>
+
+        <div style="background:var(--branco); border-radius:16px; padding:20px 24px; box-shadow:var(--sombra);">
+          <h3 style="margin-bottom:12px; color:var(--azul-escuro);">⚡ Próximas metas</h3>
+          <ul id="proximasMetas" style="list-style:none; padding:0;">
+            <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Iniciar Estatística - revisar conceitos básicos</li>
+            <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Simulado de Direito Penal (10 questões)</li>
+            <li style="padding:8px 0;">🔹 TAF: corrida 3km + flexões</li>
+          </ul>
         </div>
-      </div>
+      </section>
 
-      <div class="progress-container">
-        <h3>📈 Progresso por Disciplina</h3>
-        <div id="progressoDisciplinasLista"></div>
-      </div>
-
-      <div style="background:var(--branco); border-radius:16px; padding:20px 24px; box-shadow:var(--sombra);">
-        <h3 style="margin-bottom:12px; color:var(--azul-escuro);">⚡ Próximas metas</h3>
-        <ul id="proximasMetas" style="list-style:none; padding:0;">
-          <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Iniciar Estatística - revisar conceitos básicos</li>
-          <li style="padding:8px 0; border-bottom:1px solid #e2e8f0;">🔹 Simulado de Direito Penal (10 questões)</li>
-          <li style="padding:8px 0;">🔹 TAF: corrida 3km + flexões</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ================= CRONOGRAMAS ================= -->
-    <section id="page-cronogramas" class="page">
-      <div class="crono-tabs">
-        <button class="active" data-crono="focado">🎯 Focado na Banca (AOCP)</button>
-        <button data-crono="completo">📘 Completo (Edital)</button>
-      </div>
-      <div class="crono-content" id="cronoContent">
-        <!-- preenchido por JS -->
-      </div>
-    </section>
-
-    <!-- ================= DISCIPLINAS ================= -->
-    <section id="page-disciplinas" class="page">
-      <div class="flex-between mb-20">
-        <h2 style="color:var(--azul-escuro);">📚 Disciplinas do Edital</h2>
-        <span style="font-size:0.9rem; color:var(--cinza-escuro);">Clique no checkbox para marcar como concluída</span>
-      </div>
-      <div class="disciplinas-grid" id="disciplinasGrid"></div>
-    </section>
-
-    <!-- ================= SIMULADOS ================= -->
-    <section id="page-simulados" class="page">
-      <div class="simulador-box">
-        <h3 style="color:var(--azul-escuro);">🧪 Simulado AOCP</h3>
-        <p style="color:var(--cinza-escuro); margin-bottom:12px;">Selecione uma disciplina e responda as questões. O banco prioriza estilo AOCP.</p>
-        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-          <select id="selectSimulado" style="padding:8px 16px; border-radius:30px; border:2px solid #d0d7e0; background:white; font-weight:500;">
-            <option value="todas">Todas as disciplinas</option>
-          </select>
-          <button class="btn" id="btnGerarSimulado" style="padding:8px 24px;">Gerar Simulado</button>
+      <!-- CRONOGRAMAS -->
+      <section id="page-cronogramas" class="page">
+        <div class="crono-tabs">
+          <button class="active" data-crono="focado">🎯 Focado na Banca (AOCP)</button>
+          <button data-crono="completo">📘 Completo (Edital)</button>
         </div>
-        <div id="simuladoQuestoes"></div>
-        <div id="simuladoFeedback" class="feedback" style="display:none;"></div>
-      </div>
-      <div style="background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
-        <h4 style="color:var(--azul-escuro);">📊 Histórico de Simulados</h4>
-        <div id="historicoSimulados" style="margin-top:10px; font-size:0.9rem; color:var(--cinza-escuro);">
-          Nenhum simulado realizado ainda.
+        <div class="crono-content" id="cronoContent">
+          <!-- preenchido por JS -->
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= TAF ================= -->
-    <section id="page-taf" class="page">
-      <h2 style="color:var(--azul-escuro); margin-bottom:16px;">🏃 Treinos para o TAF</h2>
-      <div class="taf-grid" id="tafGrid"></div>
-      <div style="margin-top:20px; background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
-        <h4 style="color:var(--azul-escuro);">📌 Dicas</h4>
-        <ul style="list-style:disc; padding-left:20px; color:var(--cinza-escuro);">
-          <li>Corrida: aumente a distância gradualmente (2km → 5km)</li>
-          <li>Flexões: 3 séries de 10, evoluindo para 20</li>
-          <li>Abdominais: 3 séries de 15, evoluindo para 30</li>
-          <li>Barra fixa: treine com elástico se necessário</li>
-          <li>Não se esqueça do alongamento antes e depois</li>
-        </ul>
-      </div>
-    </section>
+      <!-- DISCIPLINAS -->
+      <section id="page-disciplinas" class="page">
+        <div class="flex-between mb-20">
+          <h2 style="color:var(--azul-escuro);">📚 Disciplinas do Edital</h2>
+          <span style="font-size:0.9rem; color:var(--cinza-escuro);">Clique no checkbox para marcar como concluída</span>
+        </div>
+        <div class="disciplinas-grid" id="disciplinasGrid"></div>
+      </section>
 
-    <!-- ================= POMODORO ================= -->
-    <section id="page-pomodoro" class="page">
-      <div class="pomodoro">
-        <h3 style="color:var(--azul-escuro);">⏳ Pomodoro</h3>
-        <div class="timer" id="pomodoroTimer">25:00</div>
-        <div class="controls">
-          <button id="pomoIniciar">▶ Iniciar</button>
-          <button id="pomoPausar" class="pausa">⏸ Pausar</button>
-          <button id="pomoResetar">🔄 Resetar</button>
+      <!-- SIMULADOS -->
+      <section id="page-simulados" class="page">
+        <div class="simulador-box">
+          <h3 style="color:var(--azul-escuro);">🧪 Simulado AOCP</h3>
+          <p style="color:var(--cinza-escuro); margin-bottom:12px;">Selecione uma disciplina e responda as questões. O banco prioriza estilo AOCP.</p>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+            <select id="selectSimulado" style="padding:8px 16px; border-radius:30px; border:2px solid #d0d7e0; background:white; font-weight:500;">
+              <option value="todas">Todas as disciplinas</option>
+            </select>
+            <button class="btn" id="btnGerarSimulado" style="padding:8px 24px;">Gerar Simulado</button>
+          </div>
+          <div id="simuladoQuestoes"></div>
+          <div id="simuladoFeedback" class="feedback" style="display:none;"></div>
         </div>
-        <div class="sessao-info" id="pomoInfo">Pronto para estudar</div>
-        <div style="margin-top:16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <button data-pomo="25" class="btn" style="padding:6px 18px;">25 min</button>
-          <button data-pomo="50" class="btn" style="padding:6px 18px;">50 min</button>
-          <button data-pomo="5" class="btn" style="padding:6px 18px;">5 min (pausa)</button>
+        <div style="background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
+          <h4 style="color:var(--azul-escuro);">📊 Histórico de Simulados</h4>
+          <div id="historicoSimulados" style="margin-top:10px; font-size:0.9rem; color:var(--cinza-escuro);">
+            Nenhum simulado realizado ainda.
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= MÚSICA ================= -->
-    <section id="page-musica" class="page">
-      <div class="player-box">
-        <h4 style="color:var(--azul-escuro); margin-bottom:8px;">🎵 Foco e relaxamento</h4>
-        <div class="playlist-btns">
-          <button data-playlist="lofi">🎧 Lofi</button>
-          <button data-playlist="chuva">🌧️ Som da Chuva</button>
-          <button data-playlist="frequencia">🔊 Frequência Alpha</button>
+      <!-- TAF -->
+      <section id="page-taf" class="page">
+        <h2 style="color:var(--azul-escuro); margin-bottom:16px;">🏃 Treinos para o TAF</h2>
+        <div class="taf-grid" id="tafGrid"></div>
+        <div style="margin-top:20px; background:var(--branco); border-radius:16px; padding:20px; box-shadow:var(--sombra);">
+          <h4 style="color:var(--azul-escuro);">📌 Dicas</h4>
+          <ul style="list-style:disc; padding-left:20px; color:var(--cinza-escuro);">
+            <li>Corrida: aumente a distância gradualmente (2km → 5km)</li>
+            <li>Flexões: 3 séries de 10, evoluindo para 20</li>
+            <li>Abdominais: 3 séries de 15, evoluindo para 30</li>
+            <li>Barra fixa: treine com elástico se necessário</li>
+            <li>Não se esqueça do alongamento antes e depois</li>
+          </ul>
         </div>
-        <div id="playerWrapper">
-          <iframe id="youtubePlayer" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&loop=1&playlist=jfKfPfyJRdk" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-        <p style="font-size:0.8rem; color:var(--cinza-escuro); margin-top:6px;">Clique nas playlists para trocar. Use o player para controlar.</p>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <!-- POMODORO -->
+      <section id="page-pomodoro" class="page">
+        <div class="pomodoro">
+          <h3 style="color:var(--azul-escuro);">⏳ Pomodoro</h3>
+          <div class="timer" id="pomodoroTimer">25:00</div>
+          <div class="controls">
+            <button id="pomoIniciar">▶ Iniciar</button>
+            <button id="pomoPausar" class="pausa">⏸ Pausar</button>
+            <button id="pomoResetar">🔄 Resetar</button>
+          </div>
+          <div class="sessao-info" id="pomoInfo">Pronto para estudar</div>
+          <div style="margin-top:16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button data-pomo="25" class="btn" style="padding:6px 18px;">25 min</button>
+            <button data-pomo="50" class="btn" style="padding:6px 18px;">50 min</button>
+            <button data-pomo="5" class="btn" style="padding:6px 18px;">5 min (pausa)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- MÚSICA -->
+      <section id="page-musica" class="page">
+        <div class="player-box">
+          <h4 style="color:var(--azul-escuro); margin-bottom:8px;">🎵 Foco e relaxamento</h4>
+          <div class="playlist-btns">
+            <button data-playlist="lofi">🎧 Lofi</button>
+            <button data-playlist="chuva">🌧️ Som da Chuva</button>
+            <button data-playlist="frequencia">🔊 Frequência Alpha</button>
+          </div>
+          <div id="playerWrapper">
+            <iframe id="youtubePlayer" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&loop=1&playlist=jfKfPfyJRdk" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <p style="font-size:0.8rem; color:var(--cinza-escuro); margin-top:6px;">Clique nas playlists para trocar. Use o player para controlar.</p>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script>
     // ============================================================
-    //  DADOS
+    //  GERENCIADOR DE PERFIS
     // ============================================================
+    const STORAGE_KEY_PREFIX = 'pcba_data_';
+    let perfilAtual = null; // nome do perfil
+    let dados = null; // dados do perfil
+
+    // Disciplinas fixas
     const disciplinas = [
       { id: 'portugues', nome: 'Língua Portuguesa', topics: ['Compreensão textual', 'Morfologia', 'Sintaxe', 'Redação Oficial'] },
       { id: 'logica', nome: 'Raciocínio Lógico', topics: ['Conjuntos', 'Proporções', 'Funções', 'Lógica proposicional'] },
@@ -789,30 +912,71 @@
       { id: 'estatistica', nome: 'Estatística', topics: ['Descritiva', 'Probabilidade', 'Amostragem', 'Teorema de Bayes'] }
     ];
 
-    // Progresso (salvo em localStorage)
-    let progresso = JSON.parse(localStorage.getItem('pcba_progresso')) || {};
-    let simulados = JSON.parse(localStorage.getItem('pcba_simulados')) || [];
-
-    // Inicializa progresso para disciplinas que não existem
-    disciplinas.forEach(d => {
-      if (!progresso[d.id]) {
+    // Dados padrão para um novo perfil
+    function criarDadosPadrao() {
+      const progresso = {};
+      disciplinas.forEach(d => {
         progresso[d.id] = { concluida: false, topics: {} };
         d.topics.forEach(t => { progresso[d.id].topics[t] = false; });
+      });
+      return {
+        progresso: progresso,
+        simulados: [],
+        taf: {} // índice do dia -> boolean
+      };
+    }
+
+    // Carregar dados de um perfil
+    function carregarPerfil(nome) {
+      const key = STORAGE_KEY_PREFIX + nome;
+      let raw = localStorage.getItem(key);
+      if (raw) {
+        try {
+          return JSON.parse(raw);
+        } catch(e) {
+          return null;
+        }
       }
-    });
-
-    // ============================================================
-    //  FUNÇÕES AUXILIARES
-    // ============================================================
-    function salvarProgresso() {
-      localStorage.setItem('pcba_progresso', JSON.stringify(progresso));
+      return null;
     }
 
-    function salvarSimulados() {
-      localStorage.setItem('pcba_simulados', JSON.stringify(simulados));
+    function salvarPerfil(nome, data) {
+      const key = STORAGE_KEY_PREFIX + nome;
+      localStorage.setItem(key, JSON.stringify(data));
     }
 
-    function contarConcluidas() {
+    // Inicializar ou carregar perfil
+    function initPerfil(nome) {
+      let data = carregarPerfil(nome);
+      if (!data) {
+        // Se for Thiago, criar novo; se for outro, pode criar também (mas vamos restringir)
+        if (nome.toLowerCase() === 'thiago' || nome.toLowerCase() === 'everton') {
+          data = criarDadosPadrao();
+          salvarPerfil(nome, data);
+        } else {
+          return false; // perfil não encontrado
+        }
+      }
+      perfilAtual = nome;
+      dados = data;
+      return true;
+    }
+
+    // ============================================================
+    //  FUNÇÕES DE ACESSO AOS DADOS (usam dados global)
+    // ============================================================
+    function getProgresso() { return dados.progresso; }
+    function getSimulados() { return dados.simulados; }
+    function getTaf() { return dados.taf || {}; }
+
+    function setProgresso(progresso) { dados.progresso = progresso; salvarPerfil(perfilAtual, dados); }
+    function setSimulados(simulados) { dados.simulados = simulados; salvarPerfil(perfilAtual, dados); }
+    function setTaf(taf) { dados.taf = taf; salvarPerfil(perfilAtual, dados); }
+
+    // ============================================================
+    //  DASHBOARD / UI (adaptado para usar dados do perfil)
+    // ============================================================
+    function contarConcluidas(progresso) {
       let c = 0;
       for (let id in progresso) {
         if (progresso[id].concluida) c++;
@@ -820,27 +984,30 @@
       return c;
     }
 
-    function calcularProgressoGeral() {
+    function calcularProgressoGeral(progresso) {
       const total = disciplinas.length;
-      const concluidas = contarConcluidas();
+      const concluidas = contarConcluidas(progresso);
       return Math.round((concluidas / total) * 100);
     }
 
     function atualizarDashboard() {
+      const progresso = getProgresso();
       const total = disciplinas.length;
-      const concluidas = contarConcluidas();
+      const concluidas = contarConcluidas(progresso);
       document.getElementById('discConcluidas').textContent = concluidas;
-      const pct = calcularProgressoGeral();
+      const pct = calcularProgressoGeral(progresso);
       document.getElementById('progressoGeralNum').textContent = pct + '%';
       document.getElementById('progressoGeralBar').style.width = pct + '%';
+
+      const simulados = getSimulados();
       document.getElementById('simuladosFeitos').textContent = simulados.length;
       let acertos = 0;
-      simulados.forEach(s => acertos += s.acertos || 0);
+      simulados.forEach(s => acertos += (s.acertos || 0));
       document.getElementById('acertosSimulados').textContent = acertos;
 
       // Dias restantes
       const hoje = new Date();
-      const prova = new Date(2026, 11, 6); // mês 11 = dezembro
+      const prova = new Date(2026, 11, 6);
       const diff = Math.ceil((prova - hoje) / (1000 * 60 * 60 * 24));
       document.getElementById('diasRestantes').textContent = diff > 0 ? diff : '0';
 
@@ -864,7 +1031,7 @@
         lista.appendChild(div);
       });
 
-      // Próximas metas (simples)
+      // Próximas metas
       const metas = document.getElementById('proximasMetas');
       metas.innerHTML = '';
       const naoConcluidas = disciplinas.filter(d => !progresso[d.id].concluida);
@@ -880,6 +1047,7 @@
     //  RENDER DISCIPLINAS
     // ============================================================
     function renderDisciplinas() {
+      const progresso = getProgresso();
       const grid = document.getElementById('disciplinasGrid');
       grid.innerHTML = '';
       disciplinas.forEach(d => {
@@ -917,8 +1085,8 @@
       document.querySelectorAll('.check').forEach(cb => {
         cb.addEventListener('change', function() {
           const id = this.dataset.id;
+          const progresso = getProgresso();
           progresso[id].concluida = this.checked;
-          // Se marcou concluída, marca todos os tópicos como concluídos
           if (this.checked) {
             const d = disciplinas.find(d => d.id === id);
             d.topics.forEach(t => { progresso[id].topics[t] = true; });
@@ -926,7 +1094,7 @@
             const d = disciplinas.find(d => d.id === id);
             d.topics.forEach(t => { progresso[id].topics[t] = false; });
           }
-          salvarProgresso();
+          setProgresso(progresso);
           renderDisciplinas();
           atualizarDashboard();
         });
@@ -936,18 +1104,17 @@
         cb.addEventListener('change', function() {
           const disciplina = this.dataset.disciplina;
           const topic = this.dataset.topic;
+          const progresso = getProgresso();
           progresso[disciplina].topics[topic] = this.checked;
-          // Verifica se todos os tópicos estão marcados para atualizar concluida
           const d = disciplinas.find(d => d.id === disciplina);
           const allChecked = d.topics.every(t => progresso[disciplina].topics[t]);
           progresso[disciplina].concluida = allChecked;
-          salvarProgresso();
+          setProgresso(progresso);
           renderDisciplinas();
           atualizarDashboard();
         });
       });
 
-      // Expandir tópicos
       document.querySelectorAll('[data-expand]').forEach(el => {
         el.addEventListener('click', function() {
           const id = this.dataset.expand;
@@ -965,7 +1132,7 @@
     // ============================================================
     function gerarCronograma(tipo) {
       const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const inicio = new Date(2026, 8, 9); // 09/09/2026
+      const inicio = new Date(2026, 8, 9);
       const fim = new Date(2026, 11, 6);
       const diff = Math.ceil((fim - inicio) / (1000 * 60 * 60 * 24));
       const dias = [];
@@ -975,28 +1142,15 @@
         dias.push(d);
       }
 
-      // Distribuição de disciplinas (prioridade para específicas)
       const ordemFocado = ['penal', 'processo', 'leg_extra', 'adm', 'constitucional', 'portugues', 'logica', 'informatica', 'igualdade', 'medicina', 'legislacao', 'estatistica'];
-      // Completo: intercalar
       const ordemCompleto = ['portugues', 'logica', 'informatica', 'igualdade', 'medicina', 'legislacao', 'adm', 'constitucional', 'penal', 'processo', 'leg_extra', 'estatistica'];
-
       const ordem = tipo === 'focado' ? ordemFocado : ordemCompleto;
       let idx = 0;
       let crono = [];
 
-      // Separar domingos
-      const domingos = dias.filter(d => d.getDay() === 0);
-      const outros = dias.filter(d => d.getDay() !== 0);
+      const diasEstudo = dias; // todos os dias
 
-      // Para cada dia, atribuir uma disciplina (revisão a cada 4 dias)
-      const diasEstudo = outros.concat(domingos); // mas vamos colocar domingos como revisão no início
-
-      // Reorganizar: domingos primeiro com revisão
-      let diasOrdenados = [];
-      const doms = diasEstudo.filter(d => d.getDay() === 0);
-      const semDoms = diasEstudo.filter(d => d.getDay() !== 0);
-      // Intercalar: a cada semana, um domingo no início
-      // Vamos simplesmente construir uma lista: para cada semana, colocar domingo antes
+      let diasReorganizados = [];
       const semanas = [];
       let semanaAtual = [];
       for (let d of diasEstudo) {
@@ -1005,15 +1159,13 @@
           semanaAtual = [];
         }
         semanaAtual.push(d);
-        if (d.getDay() === 6) { // sábado
+        if (d.getDay() === 6) {
           semanas.push(semanaAtual);
           semanaAtual = [];
         }
       }
       if (semanaAtual.length) semanas.push(semanaAtual);
 
-      // Reorganizar cada semana: domingo primeiro, depois os outros
-      let diasReorganizados = [];
       for (let semana of semanas) {
         const dom = semana.find(d => d.getDay() === 0);
         if (dom) diasReorganizados.push(dom);
@@ -1022,15 +1174,10 @@
         }
       }
 
-      // Agora atribuir disciplinas
       for (let d of diasReorganizados) {
         let disciplina;
         let tipoDia = 'novo';
-        // Se for domingo, revisão
         if (d.getDay() === 0) {
-          // Revisão: pegar a disciplina da semana anterior ou a próxima
-          const diaStr = d.toISOString().split('T')[0];
-          // Revisão da disciplina que caiu 2 dias atrás
           const doisAtras = new Date(d);
           doisAtras.setDate(d.getDate() - 2);
           const discAnt = crono.find(c => c.data.toISOString().split('T')[0] === doisAtras.toISOString().split('T')[0]);
@@ -1039,10 +1186,6 @@
         } else {
           disciplina = ordem[idx % ordem.length];
           idx++;
-          // A cada 4 dias, revisão
-          if (crono.length > 0 && crono.length % 4 === 0) {
-            // Mas vamos fazer revisão no domingo já
-          }
         }
         crono.push({ data: d, disciplina, tipo: tipoDia });
       }
@@ -1066,9 +1209,8 @@
     }
 
     // ============================================================
-    //  SIMULADOS
+    //  SIMULADOS (com banco de questões)
     // ============================================================
-    // Banco de questões fictício (estilo AOCP)
     const questoesBanco = {
       portugues: [
         { pergunta: 'Assinale a alternativa em que a palavra está corretamente acentuada:', opcoes: ['a) idéia', 'b) saúva', 'c) hífen', 'd) juízes', 'e) heroico'], correta: 3 },
@@ -1164,7 +1306,7 @@
       let questoes = [];
       if (disciplinaId === 'todas') {
         for (let key in questoesBanco) {
-          questoes = questoes.concat(questoesBanco[key].slice(0, 2)); // pega 2 de cada
+          questoes = questoes.concat(questoesBanco[key].slice(0, 2));
         }
       } else {
         questoes = questoesBanco[disciplinaId] || [];
@@ -1175,7 +1317,6 @@
         return;
       }
 
-      // Embaralhar e selecionar no máximo 10
       questoes = questoes.sort(() => Math.random() - 0.5).slice(0, 10);
 
       let html = `<p style="font-weight:500; margin-bottom:10px;">Responda as questões:</p>`;
@@ -1204,12 +1345,11 @@
           respostas.push({ questao: questoes[i].pergunta, selecionado, correta, acertou });
         }
 
-        // Salvar simulado
+        const simulados = getSimulados();
         simulados.push({ data: new Date().toLocaleDateString(), disciplina: disciplinaId, acertos, total });
-        salvarSimulados();
+        setSimulados(simulados);
         atualizarDashboard();
 
-        // Feedback
         feedback.style.display = 'block';
         let msg = `Você acertou ${acertos} de ${total} questões (${Math.round(acertos/total*100)}%).`;
         if (acertos === total) msg += ' 🎉 Parabéns, gabaritou!';
@@ -1224,13 +1364,13 @@
         detalhes += '</ul>';
         feedback.innerHTML = `<strong>${msg}</strong>${detalhes}`;
 
-        // Atualizar histórico
         atualizarHistoricoSimulados();
       });
     }
 
     function atualizarHistoricoSimulados() {
       const div = document.getElementById('historicoSimulados');
+      const simulados = getSimulados();
       if (simulados.length === 0) {
         div.innerHTML = 'Nenhum simulado realizado ainda.';
         return;
@@ -1258,29 +1398,28 @@
         { dia: 'Sábado', treino: 'Descanso ativo (caminhada 30min)', feito: false },
         { dia: 'Domingo', treino: 'Alongamento e revisão de metas', feito: false }
       ];
+      const tafState = getTaf();
       grid.innerHTML = '';
       treinos.forEach((t, idx) => {
         const card = document.createElement('div');
         card.className = 'taf-card';
+        const checked = tafState[idx] || false;
         card.innerHTML = `
           <div class="dia">${t.dia}</div>
           <div class="treino">${t.treino}</div>
           <div class="check">
-            <label><input type="checkbox" class="taf-check" data-idx="${idx}"> Concluído</label>
+            <label><input type="checkbox" class="taf-check" data-idx="${idx}" ${checked ? 'checked' : ''}> Concluído</label>
           </div>
         `;
         grid.appendChild(card);
       });
 
-      // Carregar estado do TAF
-      const tafState = JSON.parse(localStorage.getItem('pcba_taf')) || {};
       document.querySelectorAll('.taf-check').forEach(cb => {
-        const idx = cb.dataset.idx;
-        cb.checked = tafState[idx] || false;
         cb.addEventListener('change', function() {
-          const state = JSON.parse(localStorage.getItem('pcba_taf')) || {};
-          state[idx] = this.checked;
-          localStorage.setItem('pcba_taf', JSON.stringify(state));
+          const idx = this.dataset.idx;
+          const taf = getTaf();
+          taf[idx] = this.checked;
+          setTaf(taf);
         });
       });
     }
@@ -1289,10 +1428,8 @@
     //  POMODORO
     // ============================================================
     let pomoTempo = 25 * 60;
-    let pomoAtivo = false;
-    let pomoInterval = null;
     let pomoRestante = pomoTempo;
-    let pomoPausa = false;
+    let pomoInterval = null;
 
     function atualizarPomoDisplay() {
       const min = Math.floor(pomoRestante / 60);
@@ -1302,19 +1439,13 @@
 
     function iniciarPomo() {
       if (pomoInterval) return;
-      if (pomoRestante <= 0) {
-        pomoRestante = pomoTempo;
-      }
-      pomoAtivo = true;
+      if (pomoRestante <= 0) pomoRestante = pomoTempo;
       document.getElementById('pomoInfo').textContent = '⏳ Estudando...';
       pomoInterval = setInterval(() => {
         if (pomoRestante <= 0) {
           clearInterval(pomoInterval);
           pomoInterval = null;
-          pomoAtivo = false;
           document.getElementById('pomoInfo').textContent = '🔔 Pausa! Relaxe 5 min.';
-          // Inicia pausa automática de 5 min?
-          // Vamos tocar um som? (opcional)
           return;
         }
         pomoRestante--;
@@ -1326,7 +1457,6 @@
       if (pomoInterval) {
         clearInterval(pomoInterval);
         pomoInterval = null;
-        pomoAtivo = false;
         document.getElementById('pomoInfo').textContent = '⏸ Pausado';
       }
     }
@@ -1334,7 +1464,6 @@
     function resetarPomo() {
       clearInterval(pomoInterval);
       pomoInterval = null;
-      pomoAtivo = false;
       pomoRestante = pomoTempo;
       atualizarPomoDisplay();
       document.getElementById('pomoInfo').textContent = 'Pronto para estudar';
@@ -1343,7 +1472,6 @@
     function configurarPomo(minutos) {
       clearInterval(pomoInterval);
       pomoInterval = null;
-      pomoAtivo = false;
       pomoTempo = minutos * 60;
       pomoRestante = pomoTempo;
       atualizarPomoDisplay();
@@ -1369,81 +1497,108 @@
     // ============================================================
     //  NAVEGAÇÃO
     // ============================================================
-    document.querySelectorAll('#navPrincipal button').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('#navPrincipal button').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        const page = this.dataset.page;
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(`page-${page}`).classList.add('active');
+    function initNavegacao() {
+      document.querySelectorAll('#navPrincipal button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#navPrincipal button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const page = this.dataset.page;
+          document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+          document.getElementById(`page-${page}`).classList.add('active');
 
-        // Se for cronogramas, renderizar
-        if (page === 'cronogramas') {
-          const tipo = document.querySelector('.crono-tabs .active')?.dataset.crono || 'focado';
-          renderCronograma(tipo);
-        }
-        if (page === 'simulados') {
-          atualizarHistoricoSimulados();
-          // popular select
-          const select = document.getElementById('selectSimulado');
-          select.innerHTML = '<option value="todas">Todas as disciplinas</option>';
-          disciplinas.forEach(d => {
-            const opt = document.createElement('option');
-            opt.value = d.id;
-            opt.textContent = d.nome;
-            select.appendChild(opt);
-          });
-        }
-        if (page === 'taf') {
-          renderTAF();
-        }
+          if (page === 'cronogramas') {
+            const tipo = document.querySelector('.crono-tabs .active')?.dataset.crono || 'focado';
+            renderCronograma(tipo);
+          }
+          if (page === 'simulados') {
+            atualizarHistoricoSimulados();
+            const select = document.getElementById('selectSimulado');
+            select.innerHTML = '<option value="todas">Todas as disciplinas</option>';
+            disciplinas.forEach(d => {
+              const opt = document.createElement('option');
+              opt.value = d.id;
+              opt.textContent = d.nome;
+              select.appendChild(opt);
+            });
+          }
+          if (page === 'taf') {
+            renderTAF();
+          }
+        });
       });
-    });
 
-    // Tabs cronogramas
-    document.querySelectorAll('.crono-tabs button').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.crono-tabs button').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        renderCronograma(this.dataset.crono);
+      document.querySelectorAll('.crono-tabs button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.crono-tabs button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderCronograma(this.dataset.crono);
+        });
       });
-    });
 
-    // Botão gerar simulado
-    document.getElementById('btnGerarSimulado').addEventListener('click', function() {
-      const disciplina = document.getElementById('selectSimulado').value;
-      gerarSimulado(disciplina);
-    });
-
-    // Pomodoro
-    document.getElementById('pomoIniciar').addEventListener('click', iniciarPomo);
-    document.getElementById('pomoPausar').addEventListener('click', pausarPomo);
-    document.getElementById('pomoResetar').addEventListener('click', resetarPomo);
-    document.querySelectorAll('[data-pomo]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        configurarPomo(parseInt(this.dataset.pomo));
+      document.getElementById('btnGerarSimulado').addEventListener('click', function() {
+        const disciplina = document.getElementById('selectSimulado').value;
+        gerarSimulado(disciplina);
       });
-    });
 
-    // Player
-    document.querySelectorAll('[data-playlist]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        trocarPlaylist(this.dataset.playlist);
+      document.getElementById('pomoIniciar').addEventListener('click', iniciarPomo);
+      document.getElementById('pomoPausar').addEventListener('click', pausarPomo);
+      document.getElementById('pomoResetar').addEventListener('click', resetarPomo);
+      document.querySelectorAll('[data-pomo]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          configurarPomo(parseInt(this.dataset.pomo));
+        });
       });
-    });
+
+      document.querySelectorAll('[data-playlist]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          trocarPlaylist(this.dataset.playlist);
+        });
+      });
+    }
 
     // ============================================================
-    //  INICIALIZAÇÃO
+    //  LOGIN / TROCA DE PERFIL
     // ============================================================
-    function init() {
+    function preencherPerfil(nome) {
+      document.getElementById('nomePerfil').value = nome;
+    }
+
+    function entrarPerfil() {
+      const nome = document.getElementById('nomePerfil').value.trim();
+      if (!nome) {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = 'Digite um nome.';
+        return;
+      }
+
+      // Normalizar: capitalizar primeira letra
+      const nomeFormatado = nome.charAt(0).toUpperCase() + nome.slice(1).toLowerCase();
+      if (nomeFormatado !== 'Everton' && nomeFormatado !== 'Thiago') {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = 'Perfil não encontrado. Use Everton ou Thiago.';
+        return;
+      }
+
+      const ok = initPerfil(nomeFormatado);
+      if (!ok) {
+        document.getElementById('loginError').style.display = 'block';
+        document.getElementById('loginError').textContent = 'Erro ao carregar perfil.';
+        return;
+      }
+
+      // Esconde login, mostra app
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      document.getElementById('perfilNome').textContent = `👤 ${perfilAtual}`;
+
+      // Inicializa tudo
       renderDisciplinas();
       atualizarDashboard();
       renderCronograma('focado');
       atualizarHistoricoSimulados();
       renderTAF();
-      // Pomodoro inicial
       configurarPomo(25);
-      // Select simulado
+
       const select = document.getElementById('selectSimulado');
       select.innerHTML = '<option value="todas">Todas as disciplinas</option>';
       disciplinas.forEach(d => {
@@ -1452,17 +1607,30 @@
         opt.textContent = d.nome;
         select.appendChild(opt);
       });
-      // Player inicial
+
       trocarPlaylist('lofi');
-      // Dias restantes
-      atualizarDashboard();
     }
 
-    init();
+    document.getElementById('btnEntrar').addEventListener('click', entrarPerfil);
+    document.getElementById('nomePerfil').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') entrarPerfil();
+    });
 
-    // Atualizar dashboard periodicamente
-    setInterval(atualizarDashboard, 60000);
+    document.getElementById('btnTrocarPerfil').addEventListener('click', function() {
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('login-container').style.display = 'flex';
+      document.getElementById('nomePerfil').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      // Limpar dados atuais (serão recarregados)
+      perfilAtual = null;
+      dados = null;
+    });
+
+    // Inicializa com foco no campo
+    window.onload = function() {
+      document.getElementById('nomePerfil').focus();
+      // Se já houver perfil salvo? Não, começa no login.
+    };
   </script>
-
 </body>
 </html>
